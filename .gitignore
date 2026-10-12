@@ -1,0 +1,25 @@
+# Dependencies
+node_modules/
+
+# Build output and caches
+dist/
+build/
+.angular/
+coverage/
+
+# Environment files and secrets (never commit these)
+.env
+.env.*
+!.env.example
+
+# Logs
+*.log
+npm-debug.log*
+
+# Local database backups
+backups/
+
+# OS and editor files
+Thumbs.db
+.DS_Store
+.idea/
