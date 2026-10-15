@@ -2,15 +2,20 @@ import path from 'node:path';
 import express from 'express';
 
 export interface AppOptions {
+  /** Returns true when the database answers. Must never throw. */
+  checkDatabase: () => Promise<boolean>;
   /** Folder with the built Angular app. When omitted, only the API is served. */
   frontendDir?: string;
 }
 
-export function createApp(options: AppOptions = {}) {
+export function createApp(options: AppOptions) {
   const app = express();
 
-  app.get('/api/health', (_req, res) => {
-    res.json({ status: 'ok' });
+  // Always answers 200 while the server runs, so a hosting health check does not
+  // restart the app just because the database is temporarily unavailable.
+  app.get('/api/health', async (_req, res) => {
+    const databaseOk = await options.checkDatabase();
+    res.json({ status: 'ok', database: databaseOk ? 'ok' : 'unavailable' });
   });
 
   // Unknown API routes must never fall through to the frontend.
