@@ -1,7 +1,7 @@
+import { provideHttpClient } from '@angular/common/http';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { Health, HealthStatus } from './health';
-import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
-import { provideHttpClient } from '@angular/common/http';
 
 describe('Health', () => {
   let health: Health;
@@ -14,18 +14,18 @@ describe('Health', () => {
     health = TestBed.inject(Health);
     http = TestBed.inject(HttpTestingController);
   });
-  
+
   afterEach(() => http.verify());
 
-  it('requests /api/health and returns the status', () => {
+  it('requests /api/health and returns the server and database status', () => {
     let result: HealthStatus | undefined;
     health.check().subscribe((status) => (result = status));
 
     const request = http.expectOne('/api/health');
     expect(request.request.method).toBe('GET');
-    request.flush({ status: 'ok' });
+    request.flush({ status: 'ok', database: 'ok' });
 
-    expect(result).toEqual({ status: 'ok' });
+    expect(result).toEqual({ status: 'ok', database: 'ok' });
   });
 
   it('reports an error when the server fails', () => {

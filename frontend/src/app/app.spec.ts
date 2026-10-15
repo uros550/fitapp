@@ -29,16 +29,29 @@ describe('App', () => {
     expect(element.textContent).toContain('FitApp');
     expect(element.textContent).toContain('Checking server...');
 
-    http.expectOne('/api/health').flush({ status: 'ok' });
+    http.expectOne('/api/health').flush({ status: 'ok', database: 'ok' });
   });
 
-  it('shows the server status when the health check succeeds', () => {
+  it('shows server and database status when both are fine', () => {
     const { fixture, element } = render();
 
-    http.expectOne('/api/health').flush({ status: 'ok' });
+    http.expectOne('/api/health').flush({ status: 'ok', database: 'ok' });
     fixture.detectChanges();
 
     expect(element.textContent).toContain('Server status: ok');
+    expect(element.textContent).toContain('Database status: ok');
+    expect(element.querySelector('button')).toBeNull();
+  });
+
+  it('shows an unavailable database and a retry button', () => {
+    const { fixture, element } = render();
+
+    http.expectOne('/api/health').flush({ status: 'ok', database: 'unavailable' });
+    fixture.detectChanges();
+
+    expect(element.textContent).toContain('Server status: ok');
+    expect(element.textContent).toContain('Database status: unavailable');
+    expect(element.querySelector('button')).not.toBeNull();
   });
 
   it('shows an unavailable message when the health check fails', () => {
@@ -48,13 +61,14 @@ describe('App', () => {
     fixture.detectChanges();
 
     expect(element.textContent).toContain('Server is unavailable.');
+    expect(element.textContent).not.toContain('Database status');
     expect(element.querySelector('button')).not.toBeNull();
   });
 
   it('treats an unexpected status value as unavailable', () => {
     const { fixture, element } = render();
 
-    http.expectOne('/api/health').flush({ status: 'degraded' });
+    http.expectOne('/api/health').flush({ status: 'degraded', database: 'ok' });
     fixture.detectChanges();
 
     expect(element.textContent).toContain('Server is unavailable.');
@@ -70,9 +84,9 @@ describe('App', () => {
     fixture.detectChanges();
     expect(element.textContent).toContain('Checking server...');
 
-    http.expectOne('/api/health').flush({ status: 'ok' });
+    http.expectOne('/api/health').flush({ status: 'ok', database: 'ok' });
     fixture.detectChanges();
 
-    expect(element.textContent).toContain('Server status: ok');
+    expect(element.textContent).toContain('Database status: ok');
   });
 });

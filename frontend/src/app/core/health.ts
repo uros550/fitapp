@@ -3,6 +3,7 @@ import { inject, Service } from '@angular/core';
 
 export interface HealthStatus {
   status: string;
+  database: string;
 }
 
 @Service()

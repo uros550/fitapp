@@ -8,6 +8,10 @@
       }
       @case ('ok') {
         <p class="status-text">Server status: ok</p>
+        <p class="status-text">Database status: {{ databaseState() }}</p>
+        @if (databaseState() === 'unavailable') {
+          <button type="button" (click)="checkServer()">Try again</button>
+        }
       }
       @case ('unavailable') {
         <p class="status-text">Server is unavailable.</p>
