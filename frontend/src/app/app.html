@@ -1,0 +1,20 @@
+<main class="page">
+  <h1>FitApp</h1>
+
+  <section class="status" aria-live="polite">
+    @switch (serverState()) {
+      @case ('checking') {
+        <p class="status-text">Checking server...</p>
+      }
+      @case ('ok') {
+        <p class="status-text">Server status: ok</p>
+      }
+      @case ('unavailable') {
+        <p class="status-text">Server is unavailable.</p>
+        <button type="button" (click)="checkServer()">Try again</button>
+      }
+    }
+  </section>
+</main>
+
+<router-outlet />
