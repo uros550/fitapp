@@ -8,5 +8,5 @@ A web application for tracking daily nutrition (calories and macronutrients), wo
 
 - Frontend: Angular
 - Backend: Node.js, Express, TypeScript
-- Database: MySQL (Knex for queries and migrations)
+- Database: PostgreSQL (Knex for queries and migrations)
 - Hosting: Render (application) and Aiven (database)
